@@ -169,7 +169,7 @@ const Recommendations = () => {
             </Button>
             <div className="flex items-center gap-2">
               <Film className="h-6 w-6 text-primary" />
-              <span className="font-semibold text-lg">CineMatch</span>
+              <span className="font-semibold text-lg">7Frames</span>
             </div>
           </div>
         </div>
