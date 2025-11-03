@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getGenres } from "@/services/generos";
 import { Button } from "@/components/ui/Button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Label } from "@/components/ui/label"
@@ -19,18 +20,6 @@ interface MoviePreferencesFormProps {
   onSubmit: (preferences: MoviePreferences) => void;
 }
 
-const genres = [
-  "Acción",
-  "Aventura",
-  "Comedia",
-  "Drama",
-  "Terror",
-  "Ciencia Ficción",
-  "Romance",
-  "Thriller",
-  "Animación",
-  "Documental"
-];
 
 export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -38,6 +27,19 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
   const [duration, setDuration] = useState<[number, number]>([90, 180]);
   const [actors, setActors] = useState("");
   const [directors, setDirectors] = useState("");
+  const [genres, setGenres] = useState<string[]>([]);
+
+useEffect(() => {
+  getGenres()
+    .then((data) => {
+      // el backend devuelve [{ id, nombre }]
+      setGenres(data.map((g: any) => g.nombre));
+    })
+    .catch((err) => {
+      console.error("Error cargando géneros:", err);
+    });
+}, []);
+
 
   const handleGenreToggle = (genre: string) => {
     setSelectedGenres(prev =>
