@@ -34,7 +34,6 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
 useEffect(() => {
   getGenres()
     .then((data) => {
-      // el backend devuelve [{ id, nombre }]
       setGenres(data.map((g: any) => g.nombre));
     })
     .catch((err) => {
@@ -51,16 +50,42 @@ useEffect(() => {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({
-      genres: selectedGenres,
-      yearRange,
-      duration,
-      actors:actorsArray,
-      directors:directorsArray
-    });
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const preferences = {
+    genres: selectedGenres,
+    yearRange,
+    duration,
+    actors: actorsArray,
+    directors: directorsArray,
   };
+
+  console.log("Enviando preferencias:", preferences);
+
+  try {
+    const response = await fetch("http://localhost:8000/preferencias", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(preferences),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Respuesta del backend:", data);
+
+    // Si querés, podés pasar la respuesta a un handler o estado
+    // onSubmit(data);
+
+  } catch (error) {
+    console.error("Error al enviar preferencias:", error);
+  }
+};
 
   const noPreferencesSelected =
     selectedGenres.length === 0 &&
