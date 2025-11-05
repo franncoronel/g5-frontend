@@ -12,8 +12,8 @@ interface MoviePreferences {
   genres: string[];
   yearRange: [number, number];
   duration: [number, number];
-  actors: string;
-  directors: string;
+  actors: string[];
+  directors: string[];
 }
 
 interface MoviePreferencesFormProps {
@@ -25,8 +25,10 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [yearRange, setYearRange] = useState<[number, number]>([1990, 2024]);
   const [duration, setDuration] = useState<[number, number]>([90, 180]);
-  const [actors, setActors] = useState("");
-  const [directors, setDirectors] = useState("");
+  const [actorsArray, setActorsArray] = useState<string[]>([]);
+  const [actorInput, setActorInput] = useState("");
+  const [directorsArray, setDirectorsArray] = useState<string[]>([]);
+  const [directorInput, setDirectorInput] = useState("");
   const [genres, setGenres] = useState<string[]>([]);
 
 useEffect(() => {
@@ -55,8 +57,8 @@ useEffect(() => {
       genres: selectedGenres,
       yearRange,
       duration,
-      actors,
-      directors
+      actors:actorsArray,
+      directors:directorsArray
     });
   };
 
@@ -136,31 +138,95 @@ useEffect(() => {
 
           {/* Actores */}
           <div className="space-y-3">
-            <Label htmlFor="actors" className="text-base font-semibold">
-              Actores favoritos
-            </Label>
-            <Input
-              id="actors"
-              placeholder="Ej: Tom Hanks, Meryl Streep"
-              value={actors}
-              onChange={(e:{target: {value: string}}) => setActors(e.target.value)}
-              className="bg-input border-border"
-            />
-          </div>
+  <Label htmlFor="actors" className="text-base font-semibold">
+    Actores favoritos
+  </Label>
+
+  {/* Mostrar las etiquetas */}
+  <div className="flex flex-wrap gap-2 mb-2">
+    {actorsArray.map((actor, idx) => (
+      <div
+        key={idx}
+        className="flex items-center gap-2 px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
+      >
+        {actor}
+        <button
+          type="button"
+          onClick={() =>
+            setActorsArray((prev) => prev.filter((_, i) => i !== idx))
+          }
+          className="text-muted-foreground hover:text-destructive"
+        >
+          ×
+        </button>
+      </div>
+    ))}
+  </div>
+
+  <Input
+    id="actors"
+    placeholder="Ej: Tom Hanks, Meryl Streep"
+    value={actorInput}
+    onChange={(e) => setActorInput(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const value = actorInput.trim();
+        if (value && !actorsArray.includes(value)) {
+          setActorsArray((prev) => [...prev, value]);
+        }
+        setActorInput("");
+      }
+    }}
+    className="bg-input border-border"
+  />
+</div>
 
           {/* Directores */}
           <div className="space-y-3">
-            <Label htmlFor="directors" className="text-base font-semibold">
-              Directores favoritos
-            </Label>
-            <Input
-              id="directors"
-              placeholder="Ej: Christopher Nolan, Greta Gerwig"
-              value={directors}
-              onChange={(e: {target: {value: string}}) => setDirectors(e.target.value)}
-              className="bg-input border-border"
-            />
-          </div>
+  <Label htmlFor="directors" className="text-base font-semibold">
+    Directores favoritos
+  </Label>
+
+  {/* Mostrar las etiquetas */}
+  <div className="flex flex-wrap gap-2 mb-2">
+    {directorsArray.map((director, idx) => (
+      <div
+        key={idx}
+        className="flex items-center gap-2 px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
+      >
+        {director}
+        <button
+          type="button"
+          onClick={() =>
+            setDirectorsArray((prev) => prev.filter((_, i) => i !== idx))
+          }
+          className="text-muted-foreground hover:text-destructive"
+        >
+          ×
+        </button>
+      </div>
+    ))}
+  </div>
+
+  <Input
+    id="directors"
+    placeholder="Ej: Christopher Nolan, Greta Gerwig"
+    value={directorInput}
+    onChange={(e) => setDirectorInput(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const value = directorInput.trim();
+        if (value && !directorsArray.includes(value)) {
+          setDirectorsArray((prev) => [...prev, value]);
+        }
+      setDirectorInput("");
+      }
+    }}
+    className="bg-input border-border"
+  />
+</div>
 
           <Button
             type="submit"
