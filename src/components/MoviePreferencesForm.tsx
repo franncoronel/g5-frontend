@@ -9,11 +9,11 @@ import { Slider } from "@/components/ui/Slider"
 import { Film } from "lucide-react"
 
 interface MoviePreferences {
-  genres: string[];
+  genres?: string[];
   yearRange: [number, number];
   duration: [number, number];
-  actors: string[];
-  directors: string[];
+  actors?: string[];
+  directors?: string[];
 }
 
 interface MoviePreferencesFormProps {
@@ -61,6 +61,11 @@ useEffect(() => {
       directors:directorsArray
     });
   };
+
+  const noPreferencesSelected =
+    selectedGenres.length === 0 &&
+    directorsArray.length === 0 &&
+    actorsArray.length === 0;
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto">
@@ -233,7 +238,7 @@ useEffect(() => {
             variant="hero"
             size="lg"
             className="w-full"
-            disabled={selectedGenres.length === 0}
+            disabled={noPreferencesSelected}
           >
             Buscar Recomendaciones
           </Button>
