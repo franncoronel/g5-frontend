@@ -9,7 +9,7 @@ import { Slider } from "@/components/ui/Slider"
 import { Film } from "lucide-react"
 
 interface MoviePreferences {
-  genres?: string[];
+  genres?: number[];
   yearRange: [number, number];
   duration: [number, number];
   actors?: string[];
@@ -22,19 +22,19 @@ interface MoviePreferencesFormProps {
 
 
 export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
   const [yearRange, setYearRange] = useState<[number, number]>([1990, 2024]);
   const [duration, setDuration] = useState<[number, number]>([90, 180]);
   const [actorsArray, setActorsArray] = useState<string[]>([]);
   const [actorInput, setActorInput] = useState("");
   const [directorsArray, setDirectorsArray] = useState<string[]>([]);
   const [directorInput, setDirectorInput] = useState("");
-  const [genres, setGenres] = useState<string[]>([]);
+  const [genres, setGenres] = useState<{ id: number; nombre: string }[]>([]);
 
 useEffect(() => {
   getGenres()
     .then((data) => {
-      setGenres(data.map((g: any) => g.nombre));
+      setGenres(data); 
     })
     .catch((err) => {
       console.error("Error cargando géneros:", err);
@@ -42,13 +42,13 @@ useEffect(() => {
 }, []);
 
 
-  const handleGenreToggle = (genre: string) => {
-    setSelectedGenres(prev =>
-      prev.includes(genre)
-        ? prev.filter(g => g !== genre)
-        : [...prev, genre]
-    );
-  };
+  const handleGenreToggle = (id: number) => {
+  setSelectedGenres(prev =>
+    prev.includes(id)
+      ? prev.filter(g => g !== id)
+      : [...prev, id]
+  );
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -79,9 +79,6 @@ useEffect(() => {
     const data = await response.json();
     console.log("Respuesta del backend:", data);
 
-    // Si querés, podés pasar la respuesta a un handler o estado
-    // onSubmit(data);
-
   } catch (error) {
     console.error("Error al enviar preferencias:", error);
   }
@@ -111,20 +108,20 @@ useEffect(() => {
           <div className="space-y-3">
             <Label className="text-base font-semibold">Géneros favoritos</Label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {genres.map(genre => (
+              {genres.map((genre) => (
                 <button
-                  key={genre}
+                  key={genre.id}
                   type="button"
-                  onClick={() => handleGenreToggle(genre)}
+                  onClick={() => handleGenreToggle(genre.id)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-smooth ${
-                    selectedGenres.includes(genre)
+                    selectedGenres.includes(genre.id)
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   }`}
                 >
-                  {genre}
-                </button>
-              ))}
+                  {genre.nombre}
+                 </button>
+))}
             </div>
           </div>
 
