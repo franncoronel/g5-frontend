@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/Input";
 import { Slider } from "@/components/ui/Slider";
 import { Film } from "lucide-react";
-import { buscarActoresPorNombre } from "@/services/personas";
+import { buscarActoresPorNombre, buscarDirectoresPorNombre } from "@/services/personas";
 
 interface MoviePreferences {
   genres?: number[];
@@ -77,7 +77,7 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
 
     if (value.length >= 2) {
       try {
-        const results = await buscarActoresPorNombre(value);
+        const results = await buscarDirectoresPorNombre(value);
         setDirectorSuggestions(results);
       } catch (err) {
         console.error("Error buscando directores:", err);
