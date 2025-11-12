@@ -69,7 +69,7 @@ export const mockMovies: Movie[] = [
     genre: "Ciencia Ficción",
     duration: 169,
     rating: 8.6,
-    poster: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/iWPzXTTxAaA2JNgGjAovVAQXlyG.jpg",
     director: "Christopher Nolan"
   },
   {
@@ -79,17 +79,17 @@ export const mockMovies: Movie[] = [
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/mnZeIENx7u7bmQY4qTIfefPqKDN.jpg",
     director: "Martin Scorsese"
   },
   {
     id: 9,
-    title: "Goodfellas",
+    title: "Go2odfellas",
     year: 1990,
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/ukgHeCrZ1n12wuUX7Zv3MZbOHBs.jpg",
     director: "Martin Scorsese"
   }
   ,
@@ -100,7 +100,7 @@ export const mockMovies: Movie[] = [
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/mACnQX4rbGD4u2tJOVq3tOtntpd.jpg",
     director: "Martin Scorsese"
   }
   ,
@@ -111,7 +111,7 @@ export const mockMovies: Movie[] = [
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/43cEn0SsFYRrtVdPwvi3exQ5p55.jpg",
     director: "Martin Scorsese"
   }
   ,
@@ -122,18 +122,18 @@ export const mockMovies: Movie[] = [
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/t26UjApXY1SggD7F2LOdUsaXVuz.jpg",
     director: "Martin Scorsese"
   }
   ,
   {
     id:13,
-    title: "Gowerwereqqllas",
+    title: "Gowerwereqql33las",
     year: 1990,
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/wRoCXrMlOP0PnftcPRvynpUy6Kw.jpg",
     director: "Martin Scorsese"
   },
   {
@@ -143,7 +143,7 @@ export const mockMovies: Movie[] = [
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/xGY5rr8441ib0lT9mtHZn7e8Aay.jpg",
     director: "Martin Scorsese"
   }
   ,
@@ -154,7 +154,7 @@ export const mockMovies: Movie[] = [
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/LxLwlh4cP3HNj8dnHqlf5BUCpZ.jpg",
     director: "Martin Scorsese"
   },
   {
@@ -164,7 +164,7 @@ export const mockMovies: Movie[] = [
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/kIFthNFctw1ZYEIMer0dVnOln78.jpg",
     director: "Martin Scorsese"
   },
   {
@@ -174,27 +174,50 @@ export const mockMovies: Movie[] = [
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/fxNpz0oi2LuU82VQ4p2QtKeqgF3.jpg",
     director: "Martin Scorsese"
   },
   {
     id:19,
-    title: "Gow44erwereqqllas",
+    title: "Gow44erwereqqllffffffas",
     year: 1990,
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/gn2OqceeLGLrPy5Abz2dceB0po8.jpg",
     director: "Martin Scorsese"
   },
   {
     id:20,
-    title: "Gow44erwereqqllas",
+    title: "Gow44erwsssereqqllas",
     year: 1990,
     genre: "Drama",
     duration: 146,
     rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+    poster: "https://image.tmdb.org/t/p/w500/2X86f3KRbdStQXk0f8pZovSRpal.jpg",
+    director: "Martin Scorsese"
+    
+  }
+  ,
+  {
+    id:21,
+    title: "Gow44erwsssereqqllas",
+    year: 1990,
+    genre: "Drama",
+    duration: 146,
+    rating: 8.7,
+    poster: "https://image.tmdb.org/t/p/w500/2X86f3KRbdStQXk0f8pZovSRpal.jpg",
+    director: "Martin Scorsese"
+    
+  },
+  {
+    id:22,
+    title: "Gow44erwsssereqqllas",
+    year: 1990,
+    genre: "Drama",
+    duration: 146,
+    rating: 8.7,
+    poster: "https://image.tmdb.org/t/p/w500/2X86f3KRbdStQXk0f8pZovSRpal.jpg",
     director: "Martin Scorsese"
     
   }
