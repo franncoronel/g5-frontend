@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { MovieCard } from './MovieCard';
 import { Movie } from '@/data/domain/Movie';
 
-
+// === Hooks auxiliares ===
 const useMedia = (queries: string[], values: number[], defaultValue: number): number => {
   const get = () => values[queries.findIndex(q => matchMedia(q).matches)] ?? defaultValue;
 
@@ -49,6 +49,7 @@ const preloadImages = async (urls: string[]): Promise<void> => {
   );
 };
 
+// === Tipos ===
 interface Item {
   id: string;
   img: string;
@@ -74,6 +75,7 @@ interface MasonryProps {
   colorShiftOnHover?: boolean;
 }
 
+// === Componente principal ===
 const Masonry: React.FC<MasonryProps> = ({
   items,
   ease = 'power3.out',
@@ -89,45 +91,56 @@ const Masonry: React.FC<MasonryProps> = ({
   const columns = useMedia(
     ['(min-width:1500px)', '(min-width:1000px)', '(min-width:600px)', '(min-width:400px)'],
     [5, 4, 3, 2],
-    1
+    2
   );
 
   const [containerRef, { width }] = useMeasure<HTMLDivElement>();
   const [imagesReady, setImagesReady] = useState(false);
 
-  const getInitialPosition = (item: GridItem) => {
-    const containerRect = containerRef.current?.getBoundingClientRect();
-    if (!containerRect) return { x: item.x, y: item.y };
+  const prevCount = useRef(0);
 
-    let direction = animateFrom;
-    if (animateFrom === 'random') {
-      const dirs = ['top', 'bottom', 'left', 'right'];
-      direction = dirs[Math.floor(Math.random() * dirs.length)] as typeof animateFrom;
+  // Calcula la posición inicial de aparición
+  const getInitialPosition = (item: any, isNew: boolean) => {
+    if (isNew) {
+      // En nuevas tandas: aparecer desde abajo
+      return { x: item.x, y: item.y + 250 };
     }
 
-    switch (direction) {
-      case 'top':
-        return { x: item.x, y: -200 };
-      case 'bottom':
-        return { x: item.x, y: window.innerHeight + 200 };
-      case 'left':
-        return { x: -200, y: item.y };
-      case 'right':
-        return { x: window.innerWidth + 200, y: item.y };
-      case 'center':
-        return {
-          x: containerRect.width / 2 - item.w / 2,
-          y: containerRect.height / 2
-        };
+    // En carga inicial: dependerá de animateFrom
+    switch (animateFrom) {
+      case "left":
+        return { 
+          x: item.x - 200, 
+          y: item.y };
+      case "right":
+        return { 
+          x: item.x + 200, 
+          y: item.y };
+      case "top":
+        return { 
+          x: item.x, 
+          y: item.y - 200 };
+      case "bottom":
+        return { 
+          x: item.x, 
+          y: item.y + 200 };
+      case "center":
+        return { 
+          x: item.x + 100, 
+          y: item.y + 100 };
       default:
-        return { x: item.x, y: item.y + 100 };
+        return { 
+          x: item.x, 
+          y: item.y };
     }
   };
 
+  // === Preload de imágenes ===
   useEffect(() => {
     preloadImages(items.map(i => i.img)).then(() => setImagesReady(true));
   }, [items]);
 
+  // === Layout dinámico ===
   const grid = useMemo<GridItem[]>(() => {
     if (!width) return [];
     const colHeights = new Array(columns).fill(0);
@@ -151,46 +164,78 @@ const Masonry: React.FC<MasonryProps> = ({
 
   const hasMounted = useRef(false);
 
+  // === Animaciones ===
   useLayoutEffect(() => {
     if (!imagesReady) return;
 
     grid.forEach((item, index) => {
       const selector = `[data-key="${item.id}"]`;
-      const animProps = { x: item.x, y: item.y, width: item.w};
+      const element = document.querySelector(selector);
+      if (!element) return;
 
-      if (!hasMounted.current) {
-        const start = getInitialPosition(item);
-        gsap.fromTo(
-          selector,
-          {
-            opacity: 0,
-            x: start.x,
-            y: start.y,
-            width: item.w,
-            ...(blurToFocus && { filter: 'blur(10px)' })
-          },
-          {
-            opacity: 1,
-            ...animProps,
-            ...(blurToFocus && { filter: 'blur(0px)' }),
-            duration: 0.8,
-            ease: 'power3.out',
-            delay: index * stagger
+      const animProps = { x: item.x, y: item.y, width: item.w };
+
+      // Detectar si este ítem es nuevo (no estaba en la tanda anterior)
+      const isNew = index >= prevCount.current;
+      const start = getInitialPosition(item, isNew);
+
+          if (!hasMounted.current) {
+            // Primera tanda → animar todos
+            gsap.fromTo(
+              selector,
+              {
+                opacity: 0,
+                x: start.x,
+                y: start.y,
+                width: item.w,
+                ...(blurToFocus && { filter: "blur(10px)" })
+              },
+              {
+                opacity: 1,
+                ...animProps,
+                ...(blurToFocus && { filter: "blur(0px)" }),
+                duration: 0.8,
+                ease: "power3.out",
+                delay: index * stagger,
+                onComplete: () => element.classList.add("animated")
+              }
+            );
+          } else if (isNew) {
+            // Scroll infinito → animar solo las nuevas desde abajo
+            gsap.fromTo(
+              selector,
+              {
+                opacity: 0,
+                x: item.x,
+                y: start.y,
+                filter: "blur(10px)"
+              },
+              {
+                opacity: 1,
+                ...animProps,
+                filter: "blur(0px)",
+                duration: 0.8,
+                ease: "power3.out",
+                delay: (index - prevCount.current) * 0.05,
+                onComplete: () => element.classList.add("animated")
+              }
+            );
+          } else {
+            // Elementos ya visibles → solo reposicionar sin animar
+            gsap.to(selector, {
+              ...animProps,
+              duration,
+              ease,
+              overwrite: 'auto'
+            });
           }
-        );
-      } else {
-        gsap.to(selector, {
-          ...animProps,
-          duration,
-          ease,
-          overwrite: 'auto'
         });
-      }
-    });
 
-    hasMounted.current = true;
+        prevCount.current = grid.length;
+        hasMounted.current = true;
   }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease]);
 
+  // === Hover ===
   const handleMouseEnter = (id: string, element: HTMLElement) => {
     if (scaleOnHover) {
       gsap.to(`[data-key="${id}"]`, {
@@ -219,6 +264,7 @@ const Masonry: React.FC<MasonryProps> = ({
     }
   };
 
+  // === Render ===
   return (
     <div ref={containerRef} className="relative w-full">
       {/* 

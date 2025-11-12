@@ -14,6 +14,8 @@ const Recommendations = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [preferences, setPreferences] = useState<any>(null);
   const [sortBy, setSortBy] = useState<string>("rating-desc");
+  const [page, setPage] = useState(1);
+  const perPage = 30; // cantidad de películas por tanda
 
   useEffect(() => {
     // Obtener preferencias del sessionStorage
@@ -36,6 +38,18 @@ const Recommendations = () => {
     });
 
     setMovies(filtered.length > 0 ? filtered : mockMovies);
+    
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        setPage(p => p + 1);
+      }
+    }, { rootMargin: "1000px" });
+
+    const sentinel = document.getElementById("sentinel");
+    if (sentinel) observer.observe(sentinel);
+
+    return () => observer.disconnect();
+
   }, [navigate]);
 
   // Ordenar películas basadas en la opción seleccionada
@@ -62,7 +76,9 @@ const Recommendations = () => {
     navigate("/");
   };
 
-  const masonryItems = sortedMovies.map(movie => ({
+  const moviesToShow = sortedMovies.slice(0, page * perPage);
+
+  const masonryItems =moviesToShow.map(movie => ({
     id: movie.id.toString(),
     img: movie.poster,
     url: "#",
@@ -136,7 +152,7 @@ const Recommendations = () => {
           items={masonryItems}
           ease="power3.out"
           duration={1.2}  // duración de la animación en segundos
-          stagger={0.20}  // retraso entre animaciones de elementos consecutivos
+          stagger={0.3}  // retraso entre animaciones de elementos consecutivos
           animateFrom='bottom'  // direciones : 'top', 'bottom', 'left', 'right', 'center', 'random'.
           scaleOnHover={true} // activacion del hover
           hoverScale={0.95} //escala de hover
@@ -144,6 +160,7 @@ const Recommendations = () => {
           colorShiftOnHover={false} //efecto de superposicion de color al pasar el mouse
         />
       </div>
+      <div id="sentinel" className="h-16 w-full" />
     </div> 
   );
 };
