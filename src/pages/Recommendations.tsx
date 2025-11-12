@@ -78,9 +78,9 @@ const Recommendations = () => {
             <Button
               variant="ghost"
               onClick={handleBack}
-              className="gap-2"
+              className="gap-2 text-base sm:text-lg"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-6 w-6" />
               Volver
             </Button>
               <div className="flex items-center gap-2">
@@ -91,28 +91,28 @@ const Recommendations = () => {
                   className="h-9 w-9 object-contain animate-pulse"
                 />
               </div>
-              <span className="font-semibold text-lg">7Frames</span>
+              <span className="font-semibold text-lg sm:text-xl lg:text-2xl tracking-wide">7Frames</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-9">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-2 leading-tight tracking-tight">
               Tus Recomendaciones
             </h1>
-            <p className="text-muted-foreground">
+            <p  className="text-base sm:text-lg lg:text-xl text-muted-foreground">
               Encontramos {movies.length} películas perfectas para ti
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+          <div className="flex items-center gap-3">
+            <ArrowUpDown className="h-5 w-5 text-muted-foreground" />
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-[220px] h-11 text-base sm:w-[240px] sm:h-12 sm:text-lg">
                 <SelectValue placeholder="Ordenar Por" />
               </SelectTrigger>
               <SelectContent>
