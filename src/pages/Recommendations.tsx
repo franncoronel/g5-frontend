@@ -1,104 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MovieCard } from "@/components/MovieCard";
 import { Button } from "@/components/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
-import { ArrowLeft, Film, ArrowUpDown } from "lucide-react";
+import { ArrowLeft, ArrowUpDown } from "lucide-react";
+import { Movie } from "@/data/domain/Movie";
+import { mockMovies } from "@/data/mock/MoviesData";
+import Masonry from "@/components/Masonry";
+import { MovieCard } from "@/components/MovieCard";
 
-interface Movie {
-  id: number;
-  title: string;
-  year: number;
-  genre: string;
-  duration: number;
-  rating: number;
-  poster: string;
-  director: string;
-}
-
-// Datos de ejemplo - en una app real vendría de una API
-const mockMovies: Movie[] = [
-  {
-    id: 1,
-    title: "Inception",
-    year: 2010,
-    genre: "Ciencia Ficción",
-    duration: 148,
-    rating: 8.8,
-    poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&h=600&fit=crop",
-    director: "Christopher Nolan"
-  },
-  {
-    id: 2,
-    title: "The Shawshank Redemption",
-    year: 1994,
-    genre: "Drama",
-    duration: 142,
-    rating: 9.3,
-    poster: "https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=400&h=600&fit=crop",
-    director: "Frank Darabont"
-  },
-  {
-    id: 3,
-    title: "The Dark Knight",
-    year: 2008,
-    genre: "Acción",
-    duration: 152,
-    rating: 9.0,
-    poster: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400&h=600&fit=crop",
-    director: "Christopher Nolan"
-  },
-  {
-    id: 4,
-    title: "Pulp Fiction",
-    year: 1994,
-    genre: "Thriller",
-    duration: 154,
-    rating: 8.9,
-    poster: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&h=600&fit=crop",
-    director: "Quentin Tarantino"
-  },
-  {
-    id: 5,
-    title: "Forrest Gump",
-    year: 1994,
-    genre: "Drama",
-    duration: 142,
-    rating: 8.8,
-    poster: "https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=400&h=600&fit=crop",
-    director: "Robert Zemeckis"
-  },
-  {
-    id: 6,
-    title: "The Matrix",
-    year: 1999,
-    genre: "Ciencia Ficción",
-    duration: 136,
-    rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400&h=600&fit=crop",
-    director: "Lana Wachowski"
-  },
-  {
-    id: 7,
-    title: "Interstellar",
-    year: 2014,
-    genre: "Ciencia Ficción",
-    duration: 169,
-    rating: 8.6,
-    poster: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=600&fit=crop",
-    director: "Christopher Nolan"
-  },
-  {
-    id: 8,
-    title: "Goodfellas",
-    year: 1990,
-    genre: "Drama",
-    duration: 146,
-    rating: 8.7,
-    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
-    director: "Martin Scorsese"
-  }
-];
 
 const Recommendations = () => {
   const navigate = useNavigate();
@@ -153,6 +62,13 @@ const Recommendations = () => {
     navigate("/");
   };
 
+  const masonryItems = sortedMovies.map(movie => ({
+    id: movie.id.toString(),
+    img: movie.poster,
+    url: "#",
+    movie
+  }));
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -167,8 +83,14 @@ const Recommendations = () => {
               <ArrowLeft className="h-4 w-4" />
               Volver
             </Button>
-            <div className="flex items-center gap-2">
-              <Film className="h-6 w-6 text-primary" />
+              <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-3">
+                <img
+                  src="/icon3.png"
+                  alt="7Frames Logo"
+                  className="h-9 w-9 object-contain animate-pulse"
+                />
+              </div>
               <span className="font-semibold text-lg">7Frames</span>
             </div>
           </div>
@@ -204,14 +126,25 @@ const Recommendations = () => {
             </Select>
           </div>
         </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      
+        {/* <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {sortedMovies.map(movie => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
-        </div>
+        </div> */}
+        <Masonry 
+          items={masonryItems}
+          ease="power3.out"
+          duration={1.2}  // duración de la animación en segundos
+          stagger={0.20}  // retraso entre animaciones de elementos consecutivos
+          animateFrom='bottom'  // direciones : 'top', 'bottom', 'left', 'right', 'center', 'random'.
+          scaleOnHover={true} // activacion del hover
+          hoverScale={0.95} //escala de hover
+          blurToFocus={true}  // efecto de desenfoque en la carga inicial
+          colorShiftOnHover={false} //efecto de superposicion de color al pasar el mouse
+        />
       </div>
-    </div>
+    </div> 
   );
 };
 
