@@ -53,7 +53,6 @@ interface Item {
   id: string;
   img: string;
   url: string;
-  height: number;
   movie?: Movie;
 }
 
@@ -61,7 +60,6 @@ interface GridItem extends Item {
   x: number;
   y: number;
   w: number;
-  h: number;
 }
 
 interface MasonryProps {
@@ -119,7 +117,7 @@ const Masonry: React.FC<MasonryProps> = ({
       case 'center':
         return {
           x: containerRect.width / 2 - item.w / 2,
-          y: containerRect.height / 2 - item.h / 2
+          y: containerRect.height / 2
         };
       default:
         return { x: item.x, y: item.y + 100 };
@@ -147,7 +145,7 @@ const Masonry: React.FC<MasonryProps> = ({
       const y = colHeights[col];
 
       colHeights[col] += height + gap;
-      return { ...child, x, y, w: columnWidth, h: height };
+      return { ...child, x, y, w: columnWidth };
     });
   }, [columns, items, width]);
 
@@ -158,7 +156,7 @@ const Masonry: React.FC<MasonryProps> = ({
 
     grid.forEach((item, index) => {
       const selector = `[data-key="${item.id}"]`;
-      const animProps = { x: item.x, y: item.y, width: item.w, height: item.h };
+      const animProps = { x: item.x, y: item.y, width: item.w};
 
       if (!hasMounted.current) {
         const start = getInitialPosition(item);
@@ -169,7 +167,6 @@ const Masonry: React.FC<MasonryProps> = ({
             x: start.x,
             y: start.y,
             width: item.w,
-            height: item.h,
             ...(blurToFocus && { filter: 'blur(10px)' })
           },
           {
@@ -223,28 +220,41 @@ const Masonry: React.FC<MasonryProps> = ({
   };
 
   return (
-    <div ref={containerRef} className="relative w-full h-full">
-      {grid.map(item => (
-        <div
-          key={item.id}
-          data-key={item.id}
-          className="absolute box-content"
-          style={{ willChange: 'transform, width, height, opacity' }}
-          // onClick={() => window.open(item.url, '_blank', 'noopener')}
-          onClick={() => {
-            if (item.movie) {
-              // futuro: navigate(`/pelicula/${item.movie.id}`);
-            }
-          }}
-          onMouseEnter={e => handleMouseEnter(item.id, e.currentTarget)}
-          onMouseLeave={e => handleMouseLeave(item.id, e.currentTarget)}
-        >
-          <MovieCard movie={item.movie} />
-          {colorShiftOnHover && (
-            <div className="color-overlay absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0 pointer-events-none" />
-          )}
-        </div>
-      ))}
+    <div ref={containerRef} className="relative w-full">
+      {/* 
+      El contenedor interior (con ref={containerRef}) usa posición absoluta para las cards.
+      Como los elementos absolutos no expanden la altura del contenedor por sí mismos,
+      se calculó manualmente una altura mínima (`minHeight`) basada en la posición vertical
+      más baja (y) de las cards ya colocadas. 
+      
+      A eso se le sumó un margen extra (+500) para que haya espacio visible 
+      al final del layout, evitando que las últimas cards queden pegadas 
+      al borde inferior de la página.
+      */}
+      <div  ref={containerRef} className="relative w-full" 
+            style={{ minHeight: grid.length ? Math.max(...grid.map(i => i.y)) + 500 : 0 }}>
+        {grid.map(item => (
+          <div
+            key={item.id}
+            data-key={item.id}
+            className="absolute box-content"
+            style={{ willChange: 'transform, width, height, opacity' }}
+            // onClick={() => window.open(item.url, '_blank', 'noopener')}
+            onClick={() => {
+              if (item.movie) {
+                // futuro: navigate(`/pelicula/${item.movie.id}`);
+              }
+            }}
+            onMouseEnter={e => handleMouseEnter(item.id, e.currentTarget)}
+            onMouseLeave={e => handleMouseLeave(item.id, e.currentTarget)}
+          > 
+            <MovieCard movie={item.movie}/>
+            {colorShiftOnHover && (
+              <div className="color-overlay absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0 pointer-events-none" />
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
