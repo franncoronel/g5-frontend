@@ -2,14 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { MoviePreferencesForm } from "@/components/MoviePreferencesForm";
 import { motion } from "framer-motion";
-
-interface MoviePreferences {
-  genres: string[];
-  yearRange: [number, number];
-  duration: [number, number];
-  actors: string;
-  directors: string;
-}
+import { MoviePreferences } from "@/data/domain/MoviePreferences";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -29,13 +22,13 @@ const Index = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex-1 text-center lg:text-left space-y-6"
+          className="flex-0 text-center lg:text-left space-y-6 "
         >
-          <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
+          <div className="flex items-center justify-center gap-3">
             <img
               src="/icon3.png"
               alt="7Frames Logo"
-              className="h-14 w-14 object-contain animate-pulse"
+              className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 object-contain animate-pulse"
             />
           </div>
 
@@ -57,7 +50,7 @@ const Index = () => {
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="flex-1 w-full max-w-lg bg-card/40 backdrop-blur-sm border border-border/20 rounded-2xl shadow-xl p-6 sm:p-8"
+          className="w-full max-w-3xl lg:max-w-7xl bg-card/40 backdrop-blur-sm border border-border/20 rounded-2xl shadow-xl p-6 sm:p-8"
         >
           <MoviePreferencesForm onSubmit={handleSubmit} />
         </motion.div>
