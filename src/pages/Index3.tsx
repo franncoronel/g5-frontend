@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { MoviePreferences } from "@/data/domain/MoviePreferences";
 import Galaxy from "@/components/ui/Galaxy";
 import Particles from "@/components/ui/Particles";
+// import { MoviePreferencesForm } from "@/components/MoviePreferencesForm2";
 
 
 const Index = () => {
@@ -17,7 +18,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background/80 to-background text-foreground relative overflow-hidden">
       {/* Galaxy*/}
-      {/* <div className="hidden lg:block absolute inset-0 pointer-events-none">
+      {/* <div className="hidden lg:block absolute inset-0 pointer-events-none z-0">
         <Galaxy 
           mouseRepulsion={false}
           mouseInteraction={false}
@@ -28,7 +29,7 @@ const Index = () => {
         />
       </div> */}
       {/*Particles*/}
-      <div className="hidden lg:block absolute inset-0 pointer-events-none">
+      <div className="hidden lg:block absolute inset-0 pointer-events-none z-0">
         <Particles
             particleColors={['#ffffff', '#ffffff']}
             particleCount={300}

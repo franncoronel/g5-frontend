@@ -27,7 +27,7 @@ const Index = () => {
         />
       </div> */}
       {/*Particles*/}
-      <div className="hidden lg:block absolute inset-0 pointer-events-none">
+      <div className="hidden lg:block absolute inset-0 pointer-events-none z-0">
         <Particles
             particleColors={['#ffffff', '#ffffff']}
             particleCount={300}
