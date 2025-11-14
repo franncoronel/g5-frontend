@@ -7,6 +7,8 @@ import { Movie } from "@/data/domain/Movie";
 import { mockMovies } from "@/data/mock/MoviesData";
 import Masonry from "@/components/Masonry";
 import { MovieCard } from "@/components/MovieCard";
+import Particles from "@/components/ui/Particles";
+
 
 
 const Recommendations = () => {
@@ -15,7 +17,7 @@ const Recommendations = () => {
   const [preferences, setPreferences] = useState<any>(null);
   const [sortBy, setSortBy] = useState<string>("rating-desc");
   const [page, setPage] = useState(1);
-  const perPage = 30; // cantidad de películas por tanda
+  const perPage = 60; // cantidad de películas por tanda
 
   useEffect(() => {
     // Obtener preferencias del sessionStorage
@@ -86,7 +88,19 @@ const Recommendations = () => {
   }));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background  overflow-x-hidden">
+      {/*Particles*/}
+      <div className="hidden lg:block fixed inset-0 pointer-events-none z-0">
+        <Particles
+            particleColors={['#ffffff', '#ffffff']}
+            particleCount={300}
+            particleSpread={5}
+            speed={0.1}
+            particleBaseSize={100}
+            alphaParticles={true}
+            disableRotation={false}/>
+      </div>
+      
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b border-border">
         <div className="container mx-auto px-4 py-4">
