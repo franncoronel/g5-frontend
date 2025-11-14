@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { MoviePreferencesForm } from "@/components/MoviePreferencesForm";
 import { motion } from "framer-motion";
 import { MoviePreferences } from "@/data/domain/MoviePreferences";
+import Galaxy from "@/components/ui/Galaxy";
+import Particles from "@/components/ui/Particles";
 
 
 const Index = () => {
@@ -14,8 +16,32 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background/80 to-background text-foreground relative overflow-hidden">
+      {/* Galaxy*/}
+      {/* <div className="hidden lg:block absolute inset-0 pointer-events-none">
+        <Galaxy 
+          mouseRepulsion={false}
+          mouseInteraction={false}
+          density={1.2}  
+          glowIntensity={0.1}
+          saturation={0.8}
+          hueShift={260}
+        />
+      </div> */}
+      {/*Particles*/}
+      <div className="hidden lg:block absolute inset-0 pointer-events-none">
+        <Particles
+            particleColors={['#ffffff', '#ffffff']}
+            particleCount={300}
+            particleSpread={5}
+            speed={0.1}
+            particleBaseSize={100}
+            alphaParticles={true}
+            disableRotation={false}/>
+      </div>
+
+        
       {/* Fondo radial decorativo */}
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background opacity-60" />
+      {/* <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background opacity-60" /> */}
 
       {/* Hero Section */}
       <div className="relative container mx-auto px-4 
