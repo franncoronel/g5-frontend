@@ -9,7 +9,8 @@ import { Film } from "lucide-react";
 import { buscarActoresPorNombre, buscarDirectoresPorNombre } from "@/services/personas";
 import { MoviePreferences } from "@/data/domain/MoviePreferences";
 
-
+import { getYearsRange} from "@/services/anios";
+import { getDurationRange } from "@/services/duracion";
 
 interface MoviePreferencesFormProps {
   onSubmit: (preferences: MoviePreferences) => void;
@@ -28,12 +29,28 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
   const [directorSuggestions, setDirectorSuggestions] = useState<{ id: string; nombre: string }[]>([]);
 
   const [genres, setGenres] = useState<{ id: number; nombre: string }[]>([]);
+  const [yearMinMax, setYearMinMax] = useState<[number, number] | null>(null);
+  const [durationMinMax, setDurationMinMax] = useState<[number, number] | null>(null);
 
   // 🔹 Cargar géneros
   useEffect(() => {
     getGenres()
       .then((data) => setGenres(data))
       .catch((err) => console.error("Error cargando géneros:", err));
+
+    getYearsRange()
+      .then((data) => {
+        setYearRange([data.min_year, data.max_year]);
+        setYearMinMax([data.min_year, data.max_year]);
+      })
+      .catch((err) => console.error("Error cargando años:", err));
+
+    getDurationRange()
+      .then((data) => {
+        setDuration([data.min_duracion, data.max_duracion]);
+        setDurationMinMax([data.min_duracion, data.max_duracion]);
+      })
+      .catch((err) => console.error("Error cargando duraciones:", err));
   }, []);
 
   // 🔹 Búsqueda de actores
@@ -176,42 +193,46 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
           </div>
 
           {/* Año */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold lg:text-xl xl:text-2xl">Año de estreno</Label>
-            <div className="space-y-2">
-              <Slider
-                min={1950}
-                max={2024}
-                step={1}
-                value={yearRange}
-                onValueChange={(value: [number, number]) => setYearRange(value)}
-                className="w-full lg:h-3"
-              />
-              <div className="flex justify-between text-sm lg:text-base xl:text-lg text-muted-foreground">
-                <span>{yearRange[0]}</span>
-                <span>{yearRange[1]}</span>
+          {yearMinMax && (
+            <div className="space-y-3">
+              <Label className="text-base font-semibold lg:text-xl xl:text-2xl">Año de estreno</Label>
+              <div className="space-y-2">
+                <Slider
+                  min={yearMinMax[0]}
+                  max={yearMinMax[1]}
+                  step={1}
+                  value={yearRange}
+                  onValueChange={(value: [number, number]) => setYearRange(value)}
+                  className="w-full lg:h-3"
+                />
+                <div className="flex justify-between text-sm lg:text-base xl:text-lg text-muted-foreground">
+                  <span>{yearRange[0]}</span>
+                  <span>{yearRange[1]}</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Duración */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold lg:text-xl xl:text-2xl">Duración (minutos)</Label>
-            <div className="space-y-2">
-              <Slider
-                min={90}
-                max={240}
-                step={10}
-                value={duration}
-                onValueChange={(value: [number, number]) => setDuration(value)}
-                className="w-full lg:h-3"
-              />
-              <div className="flex justify-between text-sm lg:text-base xl:text-lg text-muted-foreground">
-                <span>{duration[0]} min</span>
-                <span>{duration[1]} min</span>
+          {durationMinMax && (
+            <div className="space-y-3">
+              <Label className="text-base font-semibold lg:text-xl xl:text-2xl">Duración (minutos)</Label>
+              <div className="space-y-2">
+                <Slider
+                  min={durationMinMax[0]}
+                  max={durationMinMax[1]}
+                  step={10}
+                  value={duration}
+                  onValueChange={(value: [number, number]) => setDuration(value)}
+                  className="w-full lg:h-3"
+                />
+                <div className="flex justify-between text-sm lg:text-base xl:text-lg text-muted-foreground">
+                  <span>{duration[0]} min</span>
+                  <span>{duration[1]} min</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Actores */}
           <div className="space-y-3">
