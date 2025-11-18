@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getGenres } from "@/services/generos";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/Input";
 import { Slider } from "@/components/ui/Slider";
-import { Film } from "lucide-react";
+import { Film, Loader2 } from "lucide-react";
 import { buscarActoresPorNombre, buscarDirectoresPorNombre } from "@/services/personas";
 import { MoviePreferences } from "@/data/domain/MoviePreferences";
 import { useNavigate } from "react-router";
@@ -21,13 +21,20 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
   const [actorInput, setActorInput] = useState("");
   const [actorsArray, setActorsArray] = useState<{ id: string; nombre: string }[]>([]);
   const [suggestions, setSuggestions] = useState<{ id: string; nombre: string }[]>([]);
+  const [isLoadingActors, setIsLoadingActors] = useState(false);
+  const [selectedActorIndex, setSelectedActorIndex] = useState(-1);
+  const actorDropdownRef = useRef<HTMLDivElement>(null);
 
   const [directorInput, setDirectorInput] = useState("");
   const [directorsArray, setDirectorsArray] = useState<{ id: string; nombre: string }[]>([]);
   const [directorSuggestions, setDirectorSuggestions] = useState<{ id: string; nombre: string }[]>([]);
+  const [isLoadingDirectors, setIsLoadingDirectors] = useState(false);
+  const [selectedDirectorIndex, setSelectedDirectorIndex] = useState(-1);
+  const directorDropdownRef = useRef<HTMLDivElement>(null);
 
   const [genres, setGenres] = useState<{ id: number; nombre: string }[]>([]);
   const navigate = useNavigate()
+
   // 🔹 Cargar géneros
   useEffect(() => {
     getGenres()
@@ -35,20 +42,116 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
       .catch((err) => console.error("Error cargando géneros:", err));
   }, []);
 
-  // 🔹 Búsqueda de actores
-  const handleActorInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setActorInput(value);
+  // 🔹 Debounce para búsqueda de actores
+  useEffect(() => {
+    const abortController = new AbortController();
 
-    if (value.length >= 2) {
-      try {
-        const results = await buscarActoresPorNombre(value);
-        setSuggestions(results);
-      } catch (err) {
-        console.error("Error buscando actores:", err);
-      }
+    if (actorInput.length >= 2) {
+      setIsLoadingActors(true);
+      const timeoutId = setTimeout(async () => {
+        try {
+          const results = await buscarActoresPorNombre(actorInput, abortController.signal);
+          setSuggestions(results);
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.error("Error buscando actores:", err);
+          }
+        } finally {
+          setIsLoadingActors(false);
+        }
+      }, 500);
+
+      return () => {
+        clearTimeout(timeoutId);
+        abortController.abort();
+        setIsLoadingActors(false);
+      };
     } else {
       setSuggestions([]);
+      setIsLoadingActors(false);
+      return () => abortController.abort();
+    }
+  }, [actorInput]);
+
+  // 🔹 Debounce para búsqueda de directores
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    if (directorInput.length >= 2) {
+      setIsLoadingDirectors(true);
+      const timeoutId = setTimeout(async () => {
+        try {
+          const results = await buscarDirectoresPorNombre(directorInput, abortController.signal);
+          setDirectorSuggestions(results);
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.error("Error buscando directores:", err);
+          }
+        } finally {
+          setIsLoadingDirectors(false);
+        }
+      }, 500);
+
+      return () => {
+        clearTimeout(timeoutId);
+        abortController.abort();
+        setIsLoadingDirectors(false);
+      };
+    } else {
+      setDirectorSuggestions([]);
+      setIsLoadingDirectors(false);
+      return () => abortController.abort();
+    }
+  }, [directorInput]);
+
+  // 🔹 Cerrar desplegables al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (actorDropdownRef.current && !actorDropdownRef.current.contains(event.target as Node)) {
+        setSuggestions([]);
+        setSelectedActorIndex(-1);
+      }
+      if (directorDropdownRef.current && !directorDropdownRef.current.contains(event.target as Node)) {
+        setDirectorSuggestions([]);
+        setSelectedDirectorIndex(-1);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // 🔹 Búsqueda de actores
+  const handleActorInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setActorInput(value);
+    setSelectedActorIndex(-1);
+  };
+
+  const handleActorKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (suggestions.length === 0) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedActorIndex(prev =>
+          prev < suggestions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedActorIndex(prev => prev > 0 ? prev - 1 : -1);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (selectedActorIndex >= 0 && selectedActorIndex < suggestions.length) {
+          handleSelectActor(suggestions[selectedActorIndex]);
+        }
+        break;
+      case 'Escape':
+        setSuggestions([]);
+        setSelectedActorIndex(-1);
+        break;
     }
   };
 
@@ -58,26 +161,44 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
     }
     setActorInput("");
     setSuggestions([]);
+    setSelectedActorIndex(-1);
   };
 
   const handleRemoveActor = (id: string) => {
     setActorsArray((prev) => prev.filter((a) => a.id !== id));
   };
 
-  // 🔹 Búsqueda de directores (usa el mismo endpoint)
-  const handleDirectorInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // 🔹 Búsqueda de directores
+  const handleDirectorInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setDirectorInput(value);
+    setSelectedDirectorIndex(-1);
+  };
 
-    if (value.length >= 2) {
-      try {
-        const results = await buscarDirectoresPorNombre(value);
-        setDirectorSuggestions(results);
-      } catch (err) {
-        console.error("Error buscando directores:", err);
-      }
-    } else {
-      setDirectorSuggestions([]);
+  const handleDirectorKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (directorSuggestions.length === 0) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedDirectorIndex(prev =>
+          prev < directorSuggestions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedDirectorIndex(prev => prev > 0 ? prev - 1 : -1);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (selectedDirectorIndex >= 0 && selectedDirectorIndex < directorSuggestions.length) {
+          handleSelectDirector(directorSuggestions[selectedDirectorIndex]);
+        }
+        break;
+      case 'Escape':
+        setDirectorSuggestions([]);
+        setSelectedDirectorIndex(-1);
+        break;
     }
   };
 
@@ -87,6 +208,7 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
     }
     setDirectorInput("");
     setDirectorSuggestions([]);
+    setSelectedDirectorIndex(-1);
   };
 
   const handleRemoveDirector = (id: string) => {
@@ -219,22 +341,32 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
                 </div>
               ))}
             </div>
-              <div className="relative z-[9999]">
+              <div className="relative z-[9999]" ref={actorDropdownRef}>
+              <div className="relative">
               <Input
                 id="actors"
                 placeholder="Meryl Streep, Tom Hanks"
                 value={actorInput}
                 onChange={handleActorInputChange}
-                className="bg-input border-border relative z-10 lg:h-12 lg:text-lg"
+                onKeyDown={handleActorKeyDown}
+                className="bg-input border-border lg:h-12 lg:text-lg pr-10"
               />
+              {isLoadingActors && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 z-20">
+                  <Loader2 className="h-5 w-5 lg:h-6 lg:w-6 animate-spin text-primary" />
+                </div>
+              )}
+              </div>
 
             {suggestions.length > 0 && (
             <ul className="absolute left-0 w-full bg-card border border-border rounded-lg mt-1 shadow-lg max-h-48 overflow-y-auto z-[9999]">
-            {suggestions.map((actor) => (
+            {suggestions.map((actor, index) => (
             <li
               key={actor.id}
               onClick={() => handleSelectActor(actor)}
-              className="px-3 py-2 cursor-pointer hover:bg-accent"
+              className={`px-3 py-2 cursor-pointer hover:bg-accent ${
+                index === selectedActorIndex ? 'bg-accent' : ''
+              }`}
             >
             {actor.nombre}
               </li>
@@ -266,21 +398,31 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
               ))}
             </div>
 
-            <div className="relative z-50">
+            <div className="relative z-50" ref={directorDropdownRef}>
+              <div className="relative">
               <Input
                 id="directors"
                 placeholder="Greta Gerwig, Steven Spielberg"
                 value={directorInput}
                 onChange={handleDirectorInputChange}
-                className="bg-input border-border lg:h-12 lg:text-lg"
+                onKeyDown={handleDirectorKeyDown}
+                className="bg-input border-border lg:h-12 lg:text-lg pr-10"
               />
+              {isLoadingDirectors && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 z-20">
+                  <Loader2 className="h-5 w-5 lg:h-6 lg:w-6 animate-spin text-primary" />
+                </div>
+              )}
+              </div>
               {directorSuggestions.length > 0 && (
                 <ul className="absolute left-0 w-full bg-card border border-border rounded-lg mt-1 shadow-lg max-h-48 overflow-y-auto z-50">
-                  {directorSuggestions.map((director) => (
+                  {directorSuggestions.map((director, index) => (
                     <li
                       key={director.id}
                       onClick={() => handleSelectDirector(director)}
-                      className="px-3 py-2 cursor-pointer hover:bg-accent"
+                      className={`px-3 py-2 cursor-pointer hover:bg-accent ${
+                        index === selectedDirectorIndex ? 'bg-accent' : ''
+                      }`}
                     >
                       {director.nombre}
                     </li>

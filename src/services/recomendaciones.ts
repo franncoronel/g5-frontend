@@ -16,8 +16,8 @@ interface RecomendacionRequestDto{
   genres: number[];
   yearRange: [number, number];
   duration: [number, number];
-  actors: number[];
-  directors: number[];
+  actors: string[];
+  directors: string[];
 }
 
 export async function obtenerRecomendaciones(preference: RecomendacionRequestDto, qty: number=20, alpha: number=1.0) {

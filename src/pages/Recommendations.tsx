@@ -43,8 +43,8 @@ const Recommendations = () => {
           genres: prefs.genres || [],
           yearRange: prefs.yearRange,
           duration: prefs.duration,
-          actors: prefs.actors?.map(a => parseInt(a)) || [],
-          directors: prefs.directors?.map(d => parseInt(d)) || [],
+          actors: prefs.actors || [],
+          directors: prefs.directors || [],
         };
 
         const recomendacionesResponse = await obtenerRecomendaciones(requestDto, 60);
