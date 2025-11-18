@@ -21,6 +21,7 @@ const App = () => (
           <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/recommendation/1/detail" element={<DetalleRecomendacion />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          {/* <Route path="/pelicula/:id" element={<DetallePelicula />} /> */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
