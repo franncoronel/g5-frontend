@@ -1,17 +1,8 @@
 import { Card, CardContent } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
 import { Star, Calendar, Clock } from "lucide-react"
+import { Movie } from "@/data/domain/Movie";
 
-interface Movie {
-  id: number;
-  title: string;
-  year: number;
-  genre: string;
-  duration: number;
-  rating: number;
-  poster: string;
-  director: string;
-}
 
 interface MovieCardProps {
   movie: Movie;
