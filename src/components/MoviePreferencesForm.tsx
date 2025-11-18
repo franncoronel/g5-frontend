@@ -246,31 +246,31 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
     actorsArray.length === 0;
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto lg:max-w-7xl">
+    <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto lg:max-w-5xl">
       <Card className="bg-card border-border overflow-visible lg:shadow-2xl lg:rounded-3xl lg:border-border/40">
-        <CardHeader className="space-y-2 ">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-gradient-hero">
-              <Film className="h-6 w-6 lg:h-8 lg:w-8 text-primary" />
+        <CardHeader className="space-y-1 py-4 lg:py-5">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-gradient-hero">
+              <Film className="h-5 w-5 lg:h-6 lg:w-6 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-2xl lg:text-4xl font-bold">Tus Preferencias</CardTitle>
-              <CardDescription className="text-sm lg:text-lg">Cuéntanos qué tipo de películas te gustan</CardDescription>
+              <CardTitle className="text-xl lg:text-2xl font-bold">Tus Preferencias</CardTitle>
+              <CardDescription className="text-xs lg:text-sm">Cuéntanos qué tipo de películas te gustan</CardDescription>
             </div>
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6 lg:space-y-10 lg:p-10">
+        <CardContent className="space-y-4 lg:space-y-5 py-4 lg:py-6">
           {/* Géneros */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold lg:text-xl xl:text-2xl">Géneros favoritos</Label>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 lg:gap-3">
+          <div className="space-y-2">
+            <Label className="text-sm font-semibold lg:text-base">Géneros favoritos</Label>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
               {genres.map((genre) => (
                 <button
                   key={genre.id}
                   type="button"
                   onClick={() => handleGenreToggle(genre.id)}
-                  className={`px-4 py-2 lg:px-6 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-smooth ${
+                  className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-smooth ${
                     selectedGenres.includes(genre.id)
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
@@ -283,18 +283,18 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
           </div>
 
           {/* Año */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold lg:text-xl xl:text-2xl">Año de estreno</Label>
-            <div className="space-y-2">
+          <div className="space-y-2">
+            <Label className="text-sm font-semibold lg:text-base">Año de estreno</Label>
+            <div className="space-y-1.5">
               <Slider
                 min={1950}
                 max={2024}
                 step={1}
                 value={yearRange}
                 onValueChange={(value: [number, number]) => setYearRange(value)}
-                className="w-full lg:h-3"
+                className="w-full lg:h-2"
               />
-              <div className="flex justify-between text-sm lg:text-base xl:text-lg text-muted-foreground">
+              <div className="flex justify-between text-xs lg:text-sm text-muted-foreground">
                 <span>{yearRange[0]}</span>
                 <span>{yearRange[1]}</span>
               </div>
@@ -302,18 +302,18 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
           </div>
 
           {/* Duración */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold lg:text-xl xl:text-2xl">Duración (minutos)</Label>
-            <div className="space-y-2">
+          <div className="space-y-2">
+            <Label className="text-sm font-semibold lg:text-base">Duración (minutos)</Label>
+            <div className="space-y-1.5">
               <Slider
                 min={90}
                 max={240}
                 step={10}
                 value={duration}
                 onValueChange={(value: [number, number]) => setDuration(value)}
-                className="w-full lg:h-3"
+                className="w-full lg:h-2"
               />
-              <div className="flex justify-between text-sm lg:text-base xl:text-lg text-muted-foreground">
+              <div className="flex justify-between text-xs lg:text-sm text-muted-foreground">
                 <span>{duration[0]} min</span>
                 <span>{duration[1]} min</span>
               </div>
@@ -321,14 +321,14 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
           </div>
 
           {/* Actores */}
-          <div className="space-y-3">
-            <Label htmlFor="actors" className="text-base font-semibold lg:text-xl xl:text-2xl">Actores favoritos</Label>
+          <div className="space-y-2">
+            <Label htmlFor="actors" className="text-sm font-semibold lg:text-base">Actores favoritos</Label>
 
-            <div className="flex flex-wrap gap-2 mb-2">
+            <div className="flex flex-wrap gap-1.5 mb-2">
               {actorsArray.map((actor) => (
                 <div
                   key={actor.id}
-                  className="flex items-center gap-2 px-3 py-1 lg:px-4 lg:py-2 bg-secondary text-secondary-foreground rounded-full text-sm lg:text-base"
+                  className="flex items-center gap-1.5 px-2.5 py-1 lg:px-3 lg:py-1 bg-secondary text-secondary-foreground rounded-full text-xs lg:text-sm"
                 >
                   {actor.nombre}
                   <button
@@ -349,11 +349,11 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
                 value={actorInput}
                 onChange={handleActorInputChange}
                 onKeyDown={handleActorKeyDown}
-                className="bg-input border-border lg:h-12 lg:text-lg pr-10"
+                className="bg-input border-border lg:h-10 lg:text-sm pr-10"
               />
               {isLoadingActors && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 z-20">
-                  <Loader2 className="h-5 w-5 lg:h-6 lg:w-6 animate-spin text-primary" />
+                  <Loader2 className="h-4 w-4 lg:h-5 lg:w-5 animate-spin text-primary" />
                 </div>
               )}
               </div>
@@ -377,14 +377,14 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
           </div>
 
           {/* Directores */}
-          <div className="space-y-3">
-            <Label htmlFor="directors" className="text-base font-semibold lg:text-xl xl:text-2xl">Directores favoritos</Label>
+          <div className="space-y-2">
+            <Label htmlFor="directors" className="text-sm font-semibold lg:text-base">Directores favoritos</Label>
 
-            <div className="flex flex-wrap gap-2 mb-2">
+            <div className="flex flex-wrap gap-1.5 mb-2">
               {directorsArray.map((director) => (
                 <div
                   key={director.id}
-                  className="flex items-center gap-2 px-3 py-1 lg:px-4 lg:py-2 bg-secondary text-secondary-foreground rounded-full text-sm lg:text-base"
+                  className="flex items-center gap-1.5 px-2.5 py-1 lg:px-3 lg:py-1 bg-secondary text-secondary-foreground rounded-full text-xs lg:text-sm"
                 >
                   {director.nombre}
                   <button
@@ -406,11 +406,11 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
                 value={directorInput}
                 onChange={handleDirectorInputChange}
                 onKeyDown={handleDirectorKeyDown}
-                className="bg-input border-border lg:h-12 lg:text-lg pr-10"
+                className="bg-input border-border lg:h-10 lg:text-sm pr-10"
               />
               {isLoadingDirectors && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 z-20">
-                  <Loader2 className="h-5 w-5 lg:h-6 lg:w-6 animate-spin text-primary" />
+                  <Loader2 className="h-4 w-4 lg:h-5 lg:w-5 animate-spin text-primary" />
                 </div>
               )}
               </div>
@@ -436,7 +436,7 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
             type="submit"
             variant="hero"
             size="lg"
-            className="w-full lg:h-14 lg:text-xl rounded-xl"
+            className="w-full lg:h-11 lg:text-base rounded-xl"
             disabled={noPreferencesSelected}
           >
             Buscar Recomendaciones

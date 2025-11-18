@@ -122,14 +122,14 @@ const Recommendations = () => {
 
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b border-border">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Button
               variant="ghost"
               onClick={handleBack}
-              className="gap-2 text-base sm:text-lg"
+              className="gap-2 text-sm sm:text-base"
             >
-              <ArrowLeft className="h-6 w-6" />
+              <ArrowLeft className="h-5 w-5" />
               Volver
             </Button>
               <div className="flex items-center gap-2">
@@ -137,17 +137,17 @@ const Recommendations = () => {
                 <img
                   src="/icon3.png"
                   alt="7Frames Logo"
-                  className="h-9 w-9 object-contain animate-pulse"
+                  className="h-7 w-7 object-contain animate-pulse"
                 />
               </div>
-              <span className="font-semibold text-lg sm:text-xl lg:text-2xl tracking-wide">7Frames</span>
+              <span className="font-semibold text-base sm:text-lg lg:text-xl tracking-wide">7Frames</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-9">
+      <div className="container mx-auto px-4 py-6">
         {loading ? (
           <div className="flex items-center justify-center min-h-[400px]">
             <p className="text-xl text-muted-foreground">Cargando recomendaciones...</p>
@@ -158,20 +158,20 @@ const Recommendations = () => {
           </div>
         ) : (
           <>
-        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-2 leading-tight tracking-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 leading-tight tracking-tight">
               Tus Recomendaciones
             </h1>
-            <p  className="text-base sm:text-lg lg:text-xl text-muted-foreground">
+            <p  className="text-sm sm:text-base lg:text-lg text-muted-foreground">
               Encontramos {movies.length} películas perfectas para ti
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <ArrowUpDown className="h-5 w-5 text-muted-foreground" />
+            <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[220px] h-11 text-base sm:w-[240px] sm:h-12 sm:text-lg">
+              <SelectTrigger className="w-[200px] h-10 text-sm sm:w-[220px] sm:text-base">
                 <SelectValue placeholder="Ordenar Por" />
               </SelectTrigger>
               <SelectContent>

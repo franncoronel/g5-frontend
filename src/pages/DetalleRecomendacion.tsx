@@ -135,8 +135,8 @@ export const DetalleRecomendacion = () => {
             <main className="flex flex-col w-full h-full gap-1 px-5 lg:px-10 py-10">
                 {/* Portada + plataformas */}
                 <div className="flex flex-col md:flex-row gap-3">
-                    <figure className="flex flex-col items-center w-full md:w-fit md:max-lg:h-1/3  size-3/4">
-                        <img alt="MAN" className="object-cover object-center" src={movie?.poster ? movie.poster : posterStock}>
+                    <figure className="flex flex-col items-center w-full md:w-fit md:max-w-[240px] lg:max-w-[280px]">
+                        <img alt="Movie Poster" className="object-cover object-center w-full h-auto rounded-lg" src={movie?.poster ? movie.poster : posterStock}>
                         </img>
                     </figure>
 

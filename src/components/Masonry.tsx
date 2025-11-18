@@ -149,8 +149,8 @@ const Masonry: React.FC<MasonryProps> = ({
     const totalGaps = (columns - 1) * gap;
     const columnWidth = (width - totalGaps) / columns;
 
-    const aspectRatio = 1.5; // relación 2:3 del poster
-    const contentOffset = 110; // espacio adicional para texto
+    const aspectRatio = 1.33; // relación 3:4 del poster (4/3)
+    const contentOffset = 80; // espacio adicional para texto
 
     return items.map(child => {
       const col = colHeights.indexOf(Math.min(...colHeights));
