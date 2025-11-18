@@ -112,7 +112,6 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
       directors: directorsArray.map((d) => d.id),
     };
 
-    console.log("Enviando preferencias:", preferences);
     sessionStorage.setItem("moviePreferences", JSON.stringify(preferences));
     navigate("/recommendations");
 

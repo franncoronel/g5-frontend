@@ -46,14 +46,18 @@ const DatosAdicionales = ({ movie }: { movie: Movie | null }) => {
                     </div>
                 </footer>
                 <footer className="flex flex-col gap-1">
-                    <h4 className="text-md font-bold">También conocida como</h4>
-                    <div className="flex flex-row flex-wrap gap-1">
-                        {
-                            movie?.titulos_alternativos.map(titulo => (
-                                <p key={titulo} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{titulo}</p>
-                            ))
-                        }
-                    </div>
+                    {movie?.titulos_alternativos.filter(titulo => titulo !== movie?.titulo).length > 0 && (
+                        <>
+                            <h4 className="text-md font-bold">También conocida como</h4>
+                            <div className="flex flex-row flex-wrap gap-1">
+                                {
+                                    movie?.titulos_alternativos.filter(titulo => titulo !== movie?.titulo).map(titulo => (
+                                        <p key={titulo} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{titulo}</p>
+                                    ))
+                                }
+                            </div>
+                        </>
+                    )}
                 </footer>
             </section>
         </>
@@ -97,7 +101,6 @@ export const DetalleRecomendacion = () => {
 
     const fetchMovieDetail = async (movieId: string) => {
         const movieResponse = await obtenerDetalleRecomendacion(id as string)
-        console.log('Detalle Recomendación',movieResponse)
         setMovie(movieResponse)
     }
 
@@ -140,9 +143,9 @@ export const DetalleRecomendacion = () => {
                     <header className="flex flex-col gap-2">
                         <h1 className="text-3xl md:text-4xl lg:text-5xl text-center md:text-start font-bold">{movie?.titulo}</h1>
                         <section className="flex w-full lg:w-1/2 justify-between">
-                            <p className="text-md font-bold">{movie?.fecha_estreno}</p>
+                            <p className="text-md font-bold">{movie?.fecha_estreno ? new Date(movie.fecha_estreno).getFullYear() : 'N/A'}</p>
                             <p className="text-md">{movie?.duracion} (min)</p>
-                            <p className="text-md">{movie?.puntaje.promedio} ({movie?.puntaje.cantidad_votos} votos)</p>
+                            <p className="text-md">⭐ {movie?.puntaje.promedio} ({movie?.puntaje.cantidad_votos} votos)</p>
                         </section>
                         <article className="flex flex-col gap-1.5">
                             <h4 className="text-sm font-bold">Géneros</h4>

@@ -30,7 +30,6 @@ const Recommendations = () => {
         // Obtener preferencias del sessionStorage
         const storedPreferences = sessionStorage.getItem("moviePreferences");
 
-        console.log(storedPreferences)
         if (!storedPreferences) {
           navigate("/");
           return;
@@ -49,7 +48,6 @@ const Recommendations = () => {
         };
 
         const recomendacionesResponse = await obtenerRecomendaciones(requestDto, 60);
-        console.log('Recomendaciones',recomendacionesResponse)
         setMovies(recomendacionesResponse.items);
 
       } catch (err) {
