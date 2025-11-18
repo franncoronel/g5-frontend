@@ -24,11 +24,19 @@ const DatosAdicionales = ({ movie }: { movie: Movie | null }) => {
         <>
             <article className="flex flex-col gap-1">
                 <h3 className="text-md font-bold">Sinopsis</h3>
-                <p className="text-sm max-w-prose md:max-w-3xl bg-stone-900 rounded-sm p-2 opacity-85">{movie?.sinopsis}</p>
+                {
+                    movie?.sinopsis &&
+                    <p className="text-sm max-w-prose md:max-w-3xl bg-stone-900 rounded-sm p-2 opacity-85">{movie?.sinopsis}</p>
+                }
+                {
+
+                    !movie?.sinopsis &&
+                    <p className="text-sm max-w-prose md:max-w-3xl bg-stone-900 rounded-sm p-2 opacity-85">No hay sinopsis disponible.</p>
+                }
             </article>
             <section className="md:max-lg:w-full lg:w-2/3 flex flex-col md:max-lg:flex-row md:max-lg:justify-between gap-2">
                 <footer className="flex flex-col gap-1">
-                    { movie?.plataformas && <h2 className="text-md font-bold">La puedes encontrar en</h2> }
+                    { movie?.plataformas.length > 0 && <h2 className="text-md font-bold">La puedes encontrar en</h2> }
                     <div className="flex flex-row flex-wrap gap-1">
                         {
                             movie?.plataformas.map(plataforma => (
@@ -133,8 +141,8 @@ export const DetalleRecomendacion = () => {
                         <h1 className="text-3xl md:text-4xl lg:text-5xl text-center md:text-start font-bold">{movie?.titulo}</h1>
                         <section className="flex w-full lg:w-1/2 justify-between">
                             <p className="text-md font-bold">{movie?.fecha_estreno}</p>
-                            <p className="text-md">{movie?.duracion}</p>
-                            <p className="text-md">{movie?.puntaje.promedio}</p>
+                            <p className="text-md">{movie?.duracion} (min)</p>
+                            <p className="text-md">{movie?.puntaje.promedio} ({movie?.puntaje.cantidad_votos} votos)</p>
                         </section>
                         <article className="flex flex-col gap-1.5">
                             <h4 className="text-sm font-bold">Géneros</h4>
