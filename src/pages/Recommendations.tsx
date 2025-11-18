@@ -4,43 +4,64 @@ import { Button } from "@/components/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { ArrowLeft, ArrowUpDown } from "lucide-react";
 import { Movie } from "@/data/domain/Movie";
-import { mockMovies } from "@/data/mock/MoviesData";
 import Masonry from "@/components/Masonry";
-import { MovieCard } from "@/components/MovieCard";
 import Particles from "@/components/ui/Particles";
+import { obtenerRecomendaciones } from "@/services/recomendaciones";
+import { MoviePreferences } from "@/data/domain/MoviePreferences";
 
 
 
 const Recommendations = () => {
   const navigate = useNavigate();
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [preferences, setPreferences] = useState<any>(null);
+  const [preferences, setPreferences] = useState<MoviePreferences | null>(null);
   const [sortBy, setSortBy] = useState<string>("rating-desc");
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const perPage = 60; // cantidad de películas por tanda
 
   useEffect(() => {
-    // Obtener preferencias del sessionStorage
-    const storedPreferences = sessionStorage.getItem("moviePreferences");
-    if (!storedPreferences) {
-      navigate("/");
-      return;
-    }
+    const fetchRecomendaciones = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-    const prefs = JSON.parse(storedPreferences);
-    setPreferences(prefs);
+        // Obtener preferencias del sessionStorage
+        const storedPreferences = sessionStorage.getItem("moviePreferences");
 
-    // Filtrar películas basadas en preferencias
-    const filtered = mockMovies.filter(movie => {
-      const matchesGenre = prefs.genres.length === 0 || prefs.genres.includes(movie.genre);
-      const matchesYear = movie.year >= prefs.yearRange[0] && movie.year <= prefs.yearRange[1];
-      const matchesDuration = movie.duration >= prefs.duration[0] && movie.duration <= prefs.duration[1];
+        console.log(storedPreferences)
+        if (!storedPreferences) {
+          navigate("/");
+          return;
+        }
 
-      return matchesGenre && matchesYear && matchesDuration;
-    });
+        const prefs: MoviePreferences = JSON.parse(storedPreferences);
+        setPreferences(prefs);
 
-    setMovies(filtered.length > 0 ? filtered : mockMovies);
-    
+        // Hacer petición al backend
+        const requestDto = {
+          genres: prefs.genres || [],
+          yearRange: prefs.yearRange,
+          duration: prefs.duration,
+          actors: prefs.actors?.map(a => parseInt(a)) || [],
+          directors: prefs.directors?.map(d => parseInt(d)) || [],
+        };
+
+        const recomendacionesResponse = await obtenerRecomendaciones(requestDto, 60);
+        console.log('Recomendaciones',recomendacionesResponse)
+        setMovies(recomendacionesResponse.items);
+
+      } catch (err) {
+        console.error("Error al obtener recomendaciones:", err);
+        setError("Error al cargar las recomendaciones. Por favor, intenta nuevamente.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecomendaciones();
+
     const observer = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
         setPage(p => p + 1);
@@ -100,7 +121,7 @@ const Recommendations = () => {
             alphaParticles={true}
             disableRotation={false}/>
       </div>
-      
+
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b border-border">
         <div className="container mx-auto px-4 py-4">
@@ -129,6 +150,16 @@ const Recommendations = () => {
 
       {/* Content */}
       <div className="container mx-auto px-4 py-9">
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <p className="text-xl text-muted-foreground">Cargando recomendaciones...</p>
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <p className="text-xl text-red-500">{error}</p>
+          </div>
+        ) : (
+          <>
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-2 leading-tight tracking-tight">
@@ -156,13 +187,13 @@ const Recommendations = () => {
             </Select>
           </div>
         </div>
-      
+
         {/* <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {sortedMovies.map(movie => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
         </div> */}
-        <Masonry 
+        <Masonry
           items={masonryItems}
           ease="power3.out"
           duration={1.2}  // duración de la animación en segundos
@@ -173,9 +204,11 @@ const Recommendations = () => {
           blurToFocus={true}  // efecto de desenfoque en la carga inicial
           colorShiftOnHover={false} //efecto de superposicion de color al pasar el mouse
         />
+        <div id="sentinel" className="h-16 w-full" />
+          </>
+        )}
       </div>
-      <div id="sentinel" className="h-16 w-full" />
-    </div> 
+    </div>
   );
 };
 

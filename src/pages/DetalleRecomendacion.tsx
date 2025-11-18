@@ -1,6 +1,10 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/Button"
 import { ArrowLeft, Film, ArrowUpDown } from "lucide-react"
+import { useEffect, useState } from "react"
+import { obtenerDetalleRecomendacion } from "@/services/recomendaciones"
+import posterStock from "@/assets/poster_stock.png"
+
 
 const mockLady = {
     id: 'tt8613070',
@@ -15,25 +19,32 @@ const mockLady = {
     fondo: 'https://image.tmdb.org/t/p/original/foFq1RZWQIgFuCQ0nyYccywjFyX.jpg'
 }
 
-const DatosAdicionales = () => {
+const DatosAdicionales = ({ movie }: { movie: Movie | null }) => {
     return (
         <>
             <article className="flex flex-col gap-1">
                 <h3 className="text-md font-bold">Sinopsis</h3>
-                <p className="text-sm max-w-prose md:max-w-3xl bg-stone-900 rounded-sm p-2 opacity-85">{mockLady.sinopsis}</p>
+                <p className="text-sm max-w-prose md:max-w-3xl bg-stone-900 rounded-sm p-2 opacity-85">{movie?.sinopsis}</p>
             </article>
             <section className="md:max-lg:w-full lg:w-2/3 flex flex-col md:max-lg:flex-row md:max-lg:justify-between gap-2">
                 <footer className="flex flex-col gap-1">
-                    <h2 className="text-md font-bold">La puedes encontrar en</h2>
+                    { movie?.plataformas && <h2 className="text-md font-bold">La puedes encontrar en</h2> }
                     <div className="flex flex-row flex-wrap gap-1">
-                        {mockLady.plataformas.map(plataforma => <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{plataforma}</p>)}
+                        {
+                            movie?.plataformas.map(plataforma => (
+                                <p key={plataforma} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{plataforma}</p>
+                            ))
+                        }
                     </div>
                 </footer>
                 <footer className="flex flex-col gap-1">
                     <h4 className="text-md font-bold">También conocida como</h4>
                     <div className="flex flex-row flex-wrap gap-1">
-                        <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Lorem ipsum</p>
-                        <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Dolor sit</p>
+                        {
+                            movie?.titulos_alternativos.map(titulo => (
+                                <p key={titulo} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{titulo}</p>
+                            ))
+                        }
                     </div>
                 </footer>
             </section>
@@ -41,9 +52,46 @@ const DatosAdicionales = () => {
     )
 }
 
-export const DetalleRecomendacion = () => {
-    const navigate = useNavigate()
+export interface Movie {
+    id: string
+    tipo: string
+    titulo: string
+    duracion: number
+    fecha_estreno: string
+    idioma_original: string | null
+    sinopsis: string
+    poster: string | null
+    backdrop: string | null
+    generos: string[]
+    puntaje: {
+        promedio: number,
+        cantidad_votos: number
+    },
+    directores: string[],
+    elenco: string[],
+    plataformas: string[],
+    titulos_alternativos: string[]
 
+}
+
+export const DetalleRecomendacion = () => {
+    const [movie, setMovie] = useState<Movie | null>(null)
+    const navigate = useNavigate()
+    const { id } = useParams()
+
+    useEffect(()=>{
+        // Aquí iría la llamada a la API para obtener el detalle de la recomendación usando el id
+        if (id) {
+            fetchMovieDetail(id)
+        }
+
+    },[])
+
+    const fetchMovieDetail = async (movieId: string) => {
+        const movieResponse = await obtenerDetalleRecomendacion(id as string)
+        console.log('Detalle Recomendación',movieResponse)
+        setMovie(movieResponse)
+    }
 
     const handleBack = () => {
         navigate("/")
@@ -51,7 +99,7 @@ export const DetalleRecomendacion = () => {
 
 
     return (
-        <main className="bg-center bg-cover bg-black/25 backdrop-blur-sm bg-blend-darken" style={{backgroundImage: `url(${mockLady.fondo})`}}>
+        <main className="bg-center bg-cover bg-black/25 backdrop-blur-sm bg-blend-darken" style={{backgroundImage: `url(${movie?.backdrop})`}}>
             {/* <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div> */}
             {/* Header */}
             <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b border-border">
@@ -77,45 +125,50 @@ export const DetalleRecomendacion = () => {
                 {/* Portada + plataformas */}
                 <div className="flex flex-col md:flex-row gap-3">
                     <figure className="flex flex-col items-center w-full md:w-fit md:max-lg:h-1/3  size-3/4">
-                        <img alt="MAN" className="object-cover object-center" src={mockLady.portada}>
+                        <img alt="MAN" className="object-cover object-center" src={movie?.poster ? movie.poster : posterStock}>
                         </img>
                     </figure>
 
                     <header className="flex flex-col gap-2">
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl text-center md:text-start font-bold">{mockLady.nombre}</h1>
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl text-center md:text-start font-bold">{movie?.titulo}</h1>
                         <section className="flex w-full lg:w-1/2 justify-between">
-                            <p className="text-md font-bold">{mockLady.anioEstreno}</p>
-                            <p className="text-md">{mockLady.duracion}</p>
-                            <p className="text-md">*****</p>
+                            <p className="text-md font-bold">{movie?.fecha_estreno}</p>
+                            <p className="text-md">{movie?.duracion}</p>
+                            <p className="text-md">{movie?.puntaje.promedio}</p>
                         </section>
                         <article className="flex flex-col gap-1.5">
                             <h4 className="text-sm font-bold">Géneros</h4>
                             <div className="flex flex-row flex-wrap gap-1">
-                                <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Drama</p>
-                                <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Drama</p>
-                                <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Drama</p>
-                                <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Drama</p>
-                                <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Drama</p>
-                                <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Drama</p>
-                                <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Drama</p>
-                                <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Drama</p>
+                                {
+                                    movie?.generos.map(genero => (
+                                        <p key={genero} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{genero}</p>
+                                    ))
+                                }
                             </div>
                             <h4 className="text-sm font-bold">Directores</h4>
                             <div className="flex flex-row flex-wrap gap-1">
-                                <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Paul Thomas Anderson</p>
+                                {
+                                    movie?.directores.map(director => (
+                                        <p key={director} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{director}</p>
+                                    ))
+                                }
                             </div>
                             <h4 className="text-sm font-bold">Elenco</h4>
                             <div className="flex flex-row flex-wrap gap-1">
-                                <p className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">Benicio del Toro</p>
+                                {
+                                    movie?.elenco.map(actor => (
+                                        <p key={actor} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{actor}</p>
+                                    ))
+                                }
                             </div>
                         </article>
                         <div className="hidden lg:flex lg:flex-col lg:gap-2">
-                            <DatosAdicionales/>
+                            <DatosAdicionales movie={movie} />
                         </div>
                     </header>
                 </div>
                 <div className="lg:hidden flex flex-col gap-3">
-                    <DatosAdicionales/>
+                    <DatosAdicionales movie={movie} />
                 </div>
             </main>
         </main>

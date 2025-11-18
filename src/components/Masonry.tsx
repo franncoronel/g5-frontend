@@ -87,6 +87,7 @@ const Masonry: React.FC<MasonryProps> = ({
   blurToFocus = true,
   colorShiftOnHover = false
 }) => {
+  const navigate = useNavigate()
 
   const columns = useMedia(
     ['(min-width:1500px)', '(min-width:1000px)', '(min-width:600px)', '(min-width:400px)'],
@@ -109,28 +110,28 @@ const Masonry: React.FC<MasonryProps> = ({
     // En carga inicial: dependerá de animateFrom
     switch (animateFrom) {
       case "left":
-        return { 
-          x: item.x - 200, 
+        return {
+          x: item.x - 200,
           y: item.y };
       case "right":
-        return { 
-          x: item.x + 200, 
+        return {
+          x: item.x + 200,
           y: item.y };
       case "top":
-        return { 
-          x: item.x, 
+        return {
+          x: item.x,
           y: item.y - 200 };
       case "bottom":
-        return { 
-          x: item.x, 
+        return {
+          x: item.x,
           y: item.y + 200 };
       case "center":
-        return { 
-          x: item.x + 100, 
+        return {
+          x: item.x + 100,
           y: item.y + 100 };
       default:
-        return { 
-          x: item.x, 
+        return {
+          x: item.x,
           y: item.y };
     }
   };
@@ -267,17 +268,17 @@ const Masonry: React.FC<MasonryProps> = ({
   // === Render ===
   return (
     <div ref={containerRef} className="relative w-full">
-      {/* 
+      {/*
       El contenedor interior (con ref={containerRef}) usa posición absoluta para las cards.
       Como los elementos absolutos no expanden la altura del contenedor por sí mismos,
       se calculó manualmente una altura mínima (`minHeight`) basada en la posición vertical
-      más baja (y) de las cards ya colocadas. 
-      
-      A eso se le sumó un margen extra (+500) para que haya espacio visible 
-      al final del layout, evitando que las últimas cards queden pegadas 
+      más baja (y) de las cards ya colocadas.
+
+      A eso se le sumó un margen extra (+500) para que haya espacio visible
+      al final del layout, evitando que las últimas cards queden pegadas
       al borde inferior de la página.
       */}
-      <div  ref={containerRef} className="relative w-full" 
+      <div  ref={containerRef} className="relative w-full"
             style={{ minHeight: grid.length ? Math.max(...grid.map(i => i.y)) + 500 : 0 }}>
         {grid.map(item => (
           <div
@@ -288,12 +289,12 @@ const Masonry: React.FC<MasonryProps> = ({
             // onClick={() => window.open(item.url, '_blank', 'noopener')}
             onClick={() => {
               if (item.movie) {
-                // futuro: navigate(`/pelicula/${item.movie.id}`);
+                navigate(`/pelicula/${item.movie.id}`);
               }
             }}
             onMouseEnter={e => handleMouseEnter(item.id, e.currentTarget)}
             onMouseLeave={e => handleMouseLeave(item.id, e.currentTarget)}
-          > 
+          >
             <MovieCard movie={item.movie}/>
             {colorShiftOnHover && (
               <div className="color-overlay absolute inset-0 rounded-[10px] bg-gradient-to-tr from-pink-500/50 to-sky-500/50 opacity-0 pointer-events-none" />

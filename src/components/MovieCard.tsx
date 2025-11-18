@@ -1,8 +1,8 @@
 import { Card, CardContent } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
 import { Star, Calendar, Clock } from "lucide-react"
+import posterStock from "@/assets/poster_stock.png"
 import { Movie } from "@/data/domain/Movie";
-
 
 interface MovieCardProps {
   movie: Movie;
@@ -13,7 +13,7 @@ export function MovieCard({ movie }: MovieCardProps) {
     <Card className="group overflow-hidden bg-card border-border hover:border-primary/50 transition-smooth cursor-pointer">
       <div className="relative aspect-[2/3] overflow-hidden">
         <img
-          src={movie.poster}
+          src={movie.poster? movie.poster : posterStock}
           alt={movie.title}
           className="w-full h-full object-cover transition-smooth group-hover:scale-110"
         />

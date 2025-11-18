@@ -8,6 +8,7 @@ import { Slider } from "@/components/ui/Slider";
 import { Film } from "lucide-react";
 import { buscarActoresPorNombre, buscarDirectoresPorNombre } from "@/services/personas";
 import { MoviePreferences } from "@/data/domain/MoviePreferences";
+import { useNavigate } from "react-router";
 
 interface MoviePreferencesFormProps {
   onSubmit: (preferences: MoviePreferences) => void;
@@ -26,7 +27,7 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
   const [directorSuggestions, setDirectorSuggestions] = useState<{ id: string; nombre: string }[]>([]);
 
   const [genres, setGenres] = useState<{ id: number; nombre: string }[]>([]);
-
+  const navigate = useNavigate()
   // 🔹 Cargar géneros
   useEffect(() => {
     getGenres()
@@ -112,23 +113,10 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
     };
 
     console.log("Enviando preferencias:", preferences);
+    sessionStorage.setItem("moviePreferences", JSON.stringify(preferences));
+    navigate("/recommendations");
 
-    try {
-      const response = await fetch("http://localhost:8000/preferencias", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(preferences),
-      });
 
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("Respuesta del backend:", data);
-    } catch (error) {
-      console.error("Error al enviar preferencias:", error);
-    }
   };
 
   const noPreferencesSelected =
