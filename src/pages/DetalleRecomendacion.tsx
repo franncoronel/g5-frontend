@@ -136,12 +136,12 @@ export const DetalleRecomendacion = () => {
                         <h1 className="text-3xl md:text-4xl lg:text-5xl text-center md:text-start font-bold">
                             {movie?.titulo}
                         </h1>
-                        <section className="flex w-full lg:w-1/2 justify-between">
-                            <p className="text-md font-bold">
+                        <section className="inline-flex items-center gap-4 flex-shrink-0">
+                            <p className="text-md font-bold flex-shrink-0">
                                 {movie?.fecha_estreno ? new Date(movie.fecha_estreno).getFullYear() : 'N/A'}
                             </p>
-                            <p className="text-md">{movie?.duracion} (min)</p>
-                            <p className="text-md">
+                            <p className="text-md font-bold flex-shrink-0">{movie?.duracion} (min)</p>
+                            <p className="text-md font-bold flex-shrink-0">
                                 ⭐ {movie?.puntaje.promedio} ({movie?.puntaje.cantidad_votos} votos)
                             </p>
                         </section>
