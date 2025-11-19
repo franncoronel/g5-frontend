@@ -96,17 +96,19 @@ export const DetalleRecomendacion = () => {
 
 
     return (
-        <main className="bg-center bg-cover bg-black/25 backdrop-blur-sm bg-blend-darken" style={{backgroundImage: `url(${movie?.backdrop})`}}>
-            {/* <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div> */}
+    <main className="relative min-h-screen">
+        {/* Backdrop*/}
+        <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-md bg-center bg-cover bg-no-repeat"
+            style={{
+                backgroundImage: movie?.backdrop ? `url(${movie.backdrop})` : "none",
+            }}/>
+        <div className="relative z-10">
             {/* Header */}
             <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b border-border">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
-                        <Button
-                            variant="ghost"
-                            onClick={handleBack}
-                            className="gap-2"
-                        >
+                            <Button variant="ghost" onClick={handleBack} className="gap-2">
                             <ArrowLeft className="h-4 w-4" />
                             Volver
                         </Button>
@@ -118,7 +120,7 @@ export const DetalleRecomendacion = () => {
                 </div>
             </div>
 
-            <main className="flex flex-col w-full h-full gap-1 px-5 lg:px-10 py-10">
+            <div className="flex flex-col w-full h-full gap-1 px-5 lg:px-10 py-10">
                 {/* Portada + plataformas */}
                 <div className="flex flex-col md:flex-row gap-3">
                     <figure className="flex flex-col items-center w-full md:w-fit md:max-w-[240px] lg:max-w-[280px]">
@@ -127,36 +129,42 @@ export const DetalleRecomendacion = () => {
                     </figure>
 
                     <header className="flex flex-col gap-2">
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl text-center md:text-start font-bold">{movie?.titulo}</h1>
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl text-center md:text-start font-bold">
+                            {movie?.titulo}
+                        </h1>
                         <section className="flex w-full lg:w-1/2 justify-between">
-                            <p className="text-md font-bold">{movie?.fecha_estreno ? new Date(movie.fecha_estreno).getFullYear() : 'N/A'}</p>
+                            <p className="text-md font-bold">
+                                {movie?.fecha_estreno ? new Date(movie.fecha_estreno).getFullYear() : 'N/A'}
+                            </p>
                             <p className="text-md">{movie?.duracion} (min)</p>
-                            <p className="text-md">⭐ {movie?.puntaje.promedio} ({movie?.puntaje.cantidad_votos} votos)</p>
+                            <p className="text-md">
+                                ⭐ {movie?.puntaje.promedio} ({movie?.puntaje.cantidad_votos} votos)
+                            </p>
                         </section>
                         <article className="flex flex-col gap-1.5">
                             <h4 className="text-sm font-bold">Géneros</h4>
                             <div className="flex flex-row flex-wrap gap-1">
-                                {
-                                    movie?.generos.map(genero => (
-                                        <p key={genero} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{genero}</p>
-                                    ))
-                                }
+                                {movie?.generos.map(genero => (
+                                    <p key={genero} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">
+                                        {genero}
+                                    </p>
+                                ))}
                             </div>
                             <h4 className="text-sm font-bold">Directores</h4>
                             <div className="flex flex-row flex-wrap gap-1">
-                                {
-                                    movie?.directores.map(director => (
-                                        <p key={director} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{director}</p>
-                                    ))
-                                }
+                                {movie?.directores.map(director => (
+                                    <p key={director} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">
+                                        {director}
+                                    </p>
+                                ))}
                             </div>
                             <h4 className="text-sm font-bold">Elenco</h4>
                             <div className="flex flex-row flex-wrap gap-1">
-                                {
-                                    movie?.elenco.map(actor => (
-                                        <p key={actor} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{actor}</p>
-                                    ))
-                                }
+                                {movie?.elenco.map(actor => (
+                                    <p key={actor} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">
+                                        {actor}
+                                    </p>
+                                ))}
                             </div>
                         </article>
                         <div className="hidden lg:flex lg:flex-col lg:gap-2">
@@ -167,7 +175,7 @@ export const DetalleRecomendacion = () => {
                 <div className="lg:hidden flex flex-col gap-3">
                     <DatosAdicionales movie={movie} />
                 </div>
-            </main>
-        </main>
-    )
-}
+            </div>
+        </div>
+    </main>
+)}
