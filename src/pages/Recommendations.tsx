@@ -8,7 +8,7 @@ import Masonry from "@/components/Masonry";
 import Particles from "@/components/ui/Particles";
 import { obtenerRecomendaciones } from "@/services/recomendaciones";
 import { MoviePreferences } from "@/data/domain/MoviePreferences";
-
+import WaveLoader from "@/components/ui/WaveLoader";
 
 
 const Recommendations = () => {
@@ -149,9 +149,7 @@ const Recommendations = () => {
       {/* Content */}
       <div className="container mx-auto px-4 py-6">
         {loading ? (
-          <div className="flex items-center justify-center min-h-[400px]">
-            <p className="text-xl text-muted-foreground">Cargando recomendaciones...</p>
-          </div>
+          <WaveLoader text="Cargando recomendaciones..." />
         ) : error ? (
           <div className="flex items-center justify-center min-h-[400px]">
             <p className="text-xl text-red-500">{error}</p>
@@ -186,21 +184,12 @@ const Recommendations = () => {
           </div>
         </div>
 
-        {/* <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {sortedMovies.map(movie => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
-        </div> */}
         <Masonry
           items={masonryItems}
           ease="power3.out"
           duration={1.2}  // duración de la animación en segundos
           stagger={0.3}  // retraso entre animaciones de elementos consecutivos
-          animateFrom='bottom'  // direciones : 'top', 'bottom', 'left', 'right', 'center', 'random'.
-          scaleOnHover={true} // activacion del hover
-          hoverScale={0.95} //escala de hover
           blurToFocus={true}  // efecto de desenfoque en la carga inicial
-          colorShiftOnHover={false} //efecto de superposicion de color al pasar el mouse
         />
         <div id="sentinel" className="h-16 w-full" />
           </>
