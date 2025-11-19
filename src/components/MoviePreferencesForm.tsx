@@ -16,7 +16,7 @@ interface MoviePreferencesFormProps {
 
 export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
   const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
-  const [yearRange, setYearRange] = useState<[number, number]>([1990, 2024]);
+  const [yearRange, setYearRange] = useState<[number, number]>([2017, 2024]);
   const [duration, setDuration] = useState<[number, number]>([90, 180]);
   const [actorInput, setActorInput] = useState("");
   const [actorsArray, setActorsArray] = useState<{ id: string; nombre: string }[]>([]);
@@ -287,7 +287,7 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
             <Label className="text-sm font-semibold lg:text-base">Año de estreno</Label>
             <div className="space-y-1.5">
               <Slider
-                min={1950}
+                min={2016}
                 max={2024}
                 step={1}
                 value={yearRange}
@@ -306,7 +306,7 @@ export function MoviePreferencesForm({ onSubmit }: MoviePreferencesFormProps) {
             <Label className="text-sm font-semibold lg:text-base">Duración (minutos)</Label>
             <div className="space-y-1.5">
               <Slider
-                min={90}
+                min={60}
                 max={240}
                 step={10}
                 value={duration}
