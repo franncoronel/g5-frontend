@@ -18,8 +18,17 @@ const Recommendations = () => {
   const [sortBy, setSortBy] = useState<string>("rating-desc");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const perPage = 60; // cantidad de películas por tanda
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 25000); 
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const fetchRecomendaciones = async () => {
@@ -167,20 +176,24 @@ const Recommendations = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[200px] h-10 text-sm sm:w-[220px] sm:text-base">
-                <SelectValue placeholder="Ordenar Por" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="rating-desc">Rating: Mayor a Menor</SelectItem>
-                <SelectItem value="rating-asc">Rating: Menor a Mayor</SelectItem>
-                <SelectItem value="duration-desc">Duración: Mayor a Menor</SelectItem>
-                <SelectItem value="duration-asc">Duración: Menor a Mayor</SelectItem>
-                <SelectItem value="year-desc">Año: Más Reciente</SelectItem>
-                <SelectItem value="year-asc">Año: Más Antiguo</SelectItem>
-              </SelectContent>
-            </Select>
+            {!isAnimating && (
+              <>
+                <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+                <Select value={sortBy} onValueChange={setSortBy} disabled={loading}>
+                  <SelectTrigger className="w-[200px] h-10 text-sm sm:w-[220px] sm:text-base">
+                    <SelectValue placeholder="Ordenar Por" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="rating-desc">Rating: Mayor a Menor</SelectItem>
+                    <SelectItem value="rating-asc">Rating: Menor a Mayor</SelectItem>
+                    <SelectItem value="duration-desc">Duración: Mayor a Menor</SelectItem>
+                    <SelectItem value="duration-asc">Duración: Menor a Mayor</SelectItem>
+                    <SelectItem value="year-desc">Año: Más Reciente</SelectItem>
+                    <SelectItem value="year-asc">Año: Más Antiguo</SelectItem>
+                  </SelectContent>
+                </Select>
+              </>
+            )}
           </div>
         </div>
 
