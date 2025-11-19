@@ -6,6 +6,7 @@ import { obtenerDetalleRecomendacion } from "@/services/recomendaciones"
 import posterStock from "@/assets/poster_stock.png"
 
 const DatosAdicionales = ({ movie }: { movie: Movie | null }) => {
+    console.log(movie)
     return (
         <>
             <article className="flex flex-col gap-1">
@@ -26,7 +27,7 @@ const DatosAdicionales = ({ movie }: { movie: Movie | null }) => {
                     <div className="flex flex-row flex-wrap gap-1">
                         {
                             movie?.plataformas.map(plataforma => (
-                                <p key={plataforma} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{plataforma}</p>
+                                <p key={plataforma.id} className="text-sm w-fit bg-stone-900 rounded-2xl px-2 opacity-85">{plataforma.nombre}</p>
                             ))
                         }
                     </div>
@@ -67,7 +68,7 @@ export interface Movie {
     },
     directores: string[],
     elenco: string[],
-    plataformas: string[],
+    plataformas: {id: string, nombre: string}[],
     titulos_alternativos: string[]
 
 }
