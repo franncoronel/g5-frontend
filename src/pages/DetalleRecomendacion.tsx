@@ -98,11 +98,15 @@ export const DetalleRecomendacion = () => {
     return (
     <main className="relative min-h-screen">
         {/* Backdrop*/}
-        <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-md bg-center bg-cover bg-no-repeat"
-            style={{
-                backgroundImage: movie?.backdrop ? `url(${movie.backdrop})` : "none",
+        {movie?.backdrop ? (
+            <div
+                className="absolute inset-0 bg-black/50 backdrop-blur-md bg-center bg-cover bg-no-repeat"
+                style={{
+                    backgroundImage: movie?.backdrop ? `url(${movie.backdrop})` : "none",
             }}/>
+            ) : (
+            <div className="absolute inset-0 bg-black/10" />
+        )}
         <div className="relative z-10">
             {/* Header */}
             <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b border-border">
