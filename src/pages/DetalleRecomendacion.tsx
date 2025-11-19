@@ -20,7 +20,7 @@ const DatosAdicionales = ({ movie }: { movie: Movie | null }) => {
                     <p className="text-sm max-w-prose md:max-w-3xl bg-stone-900 rounded-sm p-2 opacity-85">No hay sinopsis disponible.</p>
                 }
             </article>
-            <section className="md:max-lg:w-full lg:w-2/3 flex flex-col md:max-lg:flex-row gap-2">
+            <section className="md:max-lg:w-full lg:w-2/3 flex flex-col md:max-lg:flex-row md:max-lg:justify-between gap-2">
                 <footer className="flex flex-col gap-1">
                     { movie?.plataformas.length > 0 && <h2 className="text-md font-bold">La puedes encontrar en</h2> }
                     <div className="flex flex-row flex-wrap gap-1">
