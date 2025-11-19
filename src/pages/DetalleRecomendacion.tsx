@@ -112,13 +112,15 @@ export const DetalleRecomendacion = () => {
             <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b border-border">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
-                            <Button variant="ghost" onClick={handleBack} className="gap-2">
-                            <ArrowLeft className="h-4 w-4" />
+                            <Button variant="ghost" onClick={handleBack} className="gap-2 text-sm sm:text-base">
+                            <ArrowLeft className="h-5 w-5" />
                             Volver
                         </Button>
                         <div className="flex items-center gap-2">
-                            <Film className="h-6 w-6 text-primary" />
-                            <span className="font-semibold text-lg">7Frames</span>
+                            <div className="flex items-center justify-center gap-3">
+                                <img src="/icon3.png" alt="7Frames Logo" className="h-7 w-7 object-contain animate-pulse"/>
+                            </div>
+                            <span className="font-semibold text-base sm:text-lg lg:text-xl tracking-wide">7Frames</span>
                         </div>
                     </div>
                 </div>
