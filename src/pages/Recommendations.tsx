@@ -116,7 +116,7 @@ const Recommendations = () => {
   }));
 
   return (
-    <div className="min-h-screen bg-background  overflow-x-hidden">
+    <div className="min-h-screen bg-background">
       {/*Particles*/}
       <div className="hidden lg:block fixed inset-0 pointer-events-none z-0">
         <Particles
