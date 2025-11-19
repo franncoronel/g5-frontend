@@ -100,7 +100,7 @@ export const DetalleRecomendacion = () => {
         {/* Backdrop*/}
         {movie?.backdrop ? (
             <div
-                className="absolute inset-0 bg-black/50 backdrop-blur-md bg-center bg-cover bg-no-repeat"
+                className="absolute inset-0 bg-black/50 backdrop-blur-md bg-center bg-cover bg-no-repeat bg-blend-darken"
                 style={{
                     backgroundImage: movie?.backdrop ? `url(${movie.backdrop})` : "none",
             }}/>
