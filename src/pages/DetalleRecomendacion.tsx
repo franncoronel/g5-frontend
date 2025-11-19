@@ -5,20 +5,6 @@ import { useEffect, useState } from "react"
 import { obtenerDetalleRecomendacion } from "@/services/recomendaciones"
 import posterStock from "@/assets/poster_stock.png"
 
-
-const mockLady = {
-    id: 'tt8613070',
-    tipoTitulo: 'movie',
-    nombre: 'Portrait of a Lady on Fire',
-    anioEstreno: 2019,
-    duracion: 531428.0,
-    puntuacion: 7.9,
-    sinopsis: 'Bretaña francesa, 1770. Marianne es una pintora que debe realizar el retrato matrimonial de Héloïse, una joven que acaba de dejar el convento. Héloïse no acepta su destino como mujer casada y se niega a posar, por lo que Marianne debe trabajar en secreto. Para ello, se hace pasar por dama de compañía, para así observarla de día y pintarla de noche. Su relación se vuelve más intensa a medida que comparten juntas los últimos momentos de libertad de Héloïse antes de su boda.',
-    portada: 'https://image.tmdb.org/t/p/w500/muAsDE6qAqdKB2VJsIzo1uVSSuM.jpg,fr',
-    plataformas: ['Amazon Prime Video', 'MUBI'],
-    fondo: 'https://image.tmdb.org/t/p/original/foFq1RZWQIgFuCQ0nyYccywjFyX.jpg'
-}
-
 const DatosAdicionales = ({ movie }: { movie: Movie | null }) => {
     return (
         <>
@@ -105,7 +91,7 @@ export const DetalleRecomendacion = () => {
     }
 
     const handleBack = () => {
-        navigate("/")
+        navigate(-1)
     }
 
 
